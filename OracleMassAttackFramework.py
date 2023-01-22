@@ -6,10 +6,9 @@ import ipaddress
 import validators
 
 #Coded by Oracle
-#Usage ./OracleMassAttackFramework.py -p script.py -t 100
-#Usage with extra arguements: python OracleMassAttackFramework.py -p script.py -t 100 -p 8080
+#Usage: python OracleMassAttackFramework.py -p exploit.py -t 100
+#Usage with extra arguements: python OracleMassAttackFramework.py -p exploit.py -t 100 --port 8080
 #You do not have to use IPs, you can use URLs if you want to as well, additionally, feel free to use subnets.
-
 
 print("""
 .___________. __    __   _______      ______   .______          ___       ______  __       _______ 
