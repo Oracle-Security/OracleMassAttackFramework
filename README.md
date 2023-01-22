@@ -1,6 +1,6 @@
 # OracleMassAttackFramework
 
-Usage: ./OracleMassAttackFramework.py -p script.py -t 100
+```Usage: ./OracleMassAttackFramework.py -p script.py -t 100```
 
 DISCLAIMER:
 
