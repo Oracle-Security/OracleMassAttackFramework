@@ -1,5 +1,6 @@
 #Coded by Oracle
 #Usage ./OracleMassAttackFramework.py -p script.py -t 100
+#Usage with extra arguements: ./OracleMassAttackFramework.py -p script.py -t 100 -p 8080
 
 import threading
 import subprocess
@@ -16,35 +17,41 @@ print("""
 """)
 print("Oracle's Mass Attack Framework")
 
-def run_script(ip, script_path):
-    subprocess.run(['python', script_path, ip])
 
-def read_ips_and_run(num_threads, script_path):
+def run_script(ip, script_path, *args):
+    subprocess.run(['python', script_path, ip, *args])
+
+
+def multi_thread(num_threads, script_path, *args):
     ips = Queue()
     with open("ips.txt") as f:
         for ip in f:
             ips.put(ip.strip())
     threads = []
     for i in range(num_threads):
-        t = threading.Thread(target=worker, args=(ips, script_path))
+        t = threading.Thread(target=worker, args=(ips, script_path, *args))
         t.start()
         threads.append(t)
     for t in threads:
         t.join()
 
-def worker(ips, script_path):
+
+def worker(ips, script_path, *args):
     while True:
         ip = ips.get()
         if ip is None:
             break
-        run_script(ip, script_path)
+        run_script(ip, script_path, *args)
         ips.task_done()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Threaded script execution')
     parser.add_argument('-p', '--path', type=str, required=True, help='path of script to run')
     parser.add_argument('-t', '--threads', type=int, default=10, help='number of threads')
+    parser.add_argument('args', nargs='*', help='additional arguments')
     args = parser.parse_args()
     script_path = args.path
     num_threads = args.threads
-    read_ips_and_run(num_threads, script_path)
+    additional_args = args.args
+    multi_thread(num_threads, script_path, *additional_args)
