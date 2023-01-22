@@ -7,7 +7,7 @@ import validators
 
 #Coded by Oracle
 #Usage ./OracleMassAttackFramework.py -p script.py -t 100
-#Usage with extra arguements: ./OracleMassAttackFramework.py -p script.py -t 100 -p 8080
+#Usage with extra arguements: python OracleMassAttackFramework.py -p script.py -t 100 -p 8080
 #You do not have to use IPs, you can use URLs if you want to as well, additionally, feel free to use subnets.
 
 
@@ -31,20 +31,18 @@ def initiate_thread(num_threads, script_path, *args):
     ips = Queue()
     with open("ips.txt") as f:
         for ip in f:
-            try:
-                ip = ipaddress.ip_address(ip.strip())
-            except ValueError:
-                try:
-                    subnet = ipaddress.ip_network(ip.strip())
-                    for address in subnet:
-                        ips.put(address)
-                except ValueError:
-                    if validators.url(ip):
-                        ips.put(ip)
-                    else:
-                        print(f"{ip.strip()} is not a valid IP address, URL, or subnet.")
-            else:
+            ip = ip.strip()
+            if validators.ipv4(ip):
                 ips.put(ip)
+            elif validators.url(ip):
+                ips.put(ip)
+            else:
+                try:
+                    subnet = ipaddress.ip_network(ip)
+                    for address in subnet:
+                        ips.put(str(address))
+                except ValueError:
+                    print(f"{ip} is not a valid IP address, subnet or URL.")
     threads = []
     for i in range(num_threads):
         t = threading.Thread(target=worker, args=(ips, script_path, *args))
