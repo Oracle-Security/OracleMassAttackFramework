@@ -1,5 +1,7 @@
 # OracleMassAttackFramework
 
+This is a multi-threaded script to run a python script against a list of IPs. This comes with synchronization and locking to avoid issues.
+
 ```Usage: ./OracleMassAttackFramework.py -p script.py -t 100```
 
 DISCLAIMER:
